@@ -2,104 +2,101 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grammar Snake Stable</title>
+<title>Grammar Snake Blue</title>
+
 <style>
 body{
-margin:0;
-background:#0a0a0a;
-color:white;
-font-family:Arial;
-text-align:center;
+    margin:0;
+    background:#0d47a1; /* BLUE BACKGROUND */
+    color:white;
+    font-family:Arial;
+    text-align:center;
 }
+
 canvas{
-background:black;
-display:block;
-margin:auto;
-border:4px solid lime;
+    background:#000;
+    display:block;
+    margin:15px auto;
+    border:4px solid white;
 }
+
 #info{
-background:#111;
-padding:10px;
+    padding:10px;
 }
+
 .controls{
-margin-top:10px;
+    margin-top:10px;
 }
+
 button{
-padding:12px 18px;
-margin:5px;
-font-size:18px;
-border:none;
-border-radius:8px;
+    padding:15px;
+    margin:5px;
+    font-size:22px;
+    border:none;
+    border-radius:10px;
+    background:#1976d2;
+    color:white;
 }
-.arrow{
-width:70px;
-height:70px;
-font-size:26px;
-}
+
 .pauseBtn{
-background:orange;
-color:black;
+    background:#ff9800;
+    color:black;
+    font-size:18px;
 }
 </style>
 </head>
 <body>
 
 <h2>🐍 Grammar Snake</h2>
+
 <canvas id="game" width="400" height="400"></canvas>
 
 <div id="info">
-<p id="levelText">Level 1</p>
-<p id="scoreText">Score: 0</p>
-<p><b>Correct Sentence:</b> <span id="sentence"></span></p>
-<p><b>Tamil Meaning:</b> <span id="meaning"></span></p>
+    <p id="levelText">Level 1 - Tenses</p>
+    <p id="scoreText">Score: 0</p>
+    <p><b>Correct Sentence:</b> <span id="sentence"></span></p>
+    <p><b>Tamil Meaning:</b> <span id="meaning"></span></p>
 </div>
 
 <div class="controls">
-<button class="arrow" onclick="changeDir('up')">⬆</button><br>
-<button class="arrow" onclick="changeDir('left')">⬅</button>
-<button class="arrow" onclick="changeDir('down')">⬇</button>
-<button class="arrow" onclick="changeDir('right')">➡</button>
-<br>
-<button class="pauseBtn" onclick="togglePause()" id="pauseBtn">⏸ Pause</button>
+    <button onclick="changeDir('up')">⬆</button><br>
+    <button onclick="changeDir('left')">⬅</button>
+    <button onclick="changeDir('down')">⬇</button>
+    <button onclick="changeDir('right')">➡</button>
+    <br>
+    <button class="pauseBtn" onclick="togglePause()" id="pauseBtn">⏸ Pause</button>
 </div>
 
 <script>
-const canvas=document.getElementById("game");
-const ctx=canvas.getContext("2d");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-let box=20;
-let snake=[{x:200,y:200}];
-let dir="right";
-let speed=250; // slower speed
+let box = 20;
+let snake = [{x:200,y:200}];
+let dir = "right";
+let speed = 300; // SLOWER SPEED
 let gameInterval;
-let paused=false;
+let paused = false;
 
-let score=0;
-let completed=0;
-let level=1;
+let score = 0;
+let currentIndex = 0;
+let correctOrder = [];
+let wordObjects = [];
 
-let wordObjects=[];
-let correctOrder=[];
-let currentIndex=0;
-
-const levels={
-1:{
-name:"Tenses",
-data:[
-{sentence:"She is playing football",tamil:"அவள் கால்பந்து விளையாடுகிறாள்"},
-{sentence:"They went to school",tamil:"அவர்கள் பள்ளிக்கு சென்றார்கள்"},
-{sentence:"I will visit Chennai",tamil:"நான் சென்னை செல்வேன்"}
-]
+const sentences = [
+{
+sentence:"She is playing football",
+tamil:"அவள் கால்பந்து விளையாடுகிறாள்"
 },
-2:{
-name:"Passive Voice",
-data:[
-{sentence:"The ball was kicked by him",tamil:"பந்து அவனால் அடிக்கப்பட்டது"},
-{sentence:"The cake was eaten by them",tamil:"கேக் அவர்கள் மூலம் சாப்பிடப்பட்டது"},
-{sentence:"A letter was written by her",tamil:"கடிதம் அவளால் எழுதப்பட்டது"}
-]
+{
+sentence:"They went to school",
+tamil:"அவர்கள் பள்ளிக்கு சென்றார்கள்"
+},
+{
+sentence:"I will visit Chennai",
+tamil:"நான் சென்னை செல்வேன்"
 }
-};
+];
 
 function shuffle(a){
 for(let i=a.length-1;i>0;i--){
@@ -109,11 +106,10 @@ let j=Math.floor(Math.random()*(i+1));
 }
 
 function newSentence(){
-let list=levels[level].data;
-let random=list[Math.floor(Math.random()*list.length)];
+let random = sentences[Math.floor(Math.random()*sentences.length)];
 
-correctOrder=random.sentence.split(" ");
-let words=[...correctOrder];
+correctOrder = random.sentence.split(" ");
+let words = [...correctOrder];
 shuffle(words);
 
 wordObjects=[];
@@ -128,20 +124,19 @@ y:Math.floor(Math.random()*20)*box
 currentIndex=0;
 document.getElementById("sentence").innerText=random.sentence;
 document.getElementById("meaning").innerText=random.tamil;
-document.getElementById("levelText").innerText="Level "+level+" : "+levels[level].name;
 }
 
 function speak(word){
-let u=new SpeechSynthesisUtterance(word);
-u.lang="en-US";
-speechSynthesis.speak(u);
+let utter = new SpeechSynthesisUtterance(word);
+utter.lang="en-US";
+window.speechSynthesis.speak(utter);
 }
 
 function draw(){
 ctx.clearRect(0,0,400,400);
 
 snake.forEach((s,i)=>{
-ctx.fillStyle=i==0?"#00ff00":"#008000";
+ctx.fillStyle=i==0?"lime":"green";
 ctx.fillRect(s.x,s.y,box,box);
 });
 
@@ -150,7 +145,7 @@ ctx.fillStyle="red";
 ctx.fillRect(obj.x,obj.y,box,box);
 ctx.fillStyle="white";
 ctx.font="10px Arial";
-ctx.fillText(obj.text,obj.x+1,obj.y+15);
+ctx.fillText(obj.text,obj.x+2,obj.y+15);
 });
 
 let head={x:snake[0].x,y:snake[0].y};
@@ -164,29 +159,19 @@ for(let i=0;i<wordObjects.length;i++){
 if(head.x==wordObjects[i].x && head.y==wordObjects[i].y){
 
 if(wordObjects[i].text==correctOrder[currentIndex]){
-speak(wordObjects[i].text);
+speak(wordObjects[i].text);  // PRONUNCIATION
 snake.push({});
 currentIndex++;
 wordObjects.splice(i,1);
 
 if(currentIndex==correctOrder.length){
 score++;
-completed++;
 document.getElementById("scoreText").innerText="Score: "+score;
-
-if(completed>=3){
-level++;
-completed=0;
-if(!levels[level]){
-alert("🏆 All Levels Completed!");
-return;
-}
-}
-
+alert("🎉 Sentence Completed!");
 newSentence();
 }
 }else{
-alert("❌ Wrong Word!");
+alert("❌ Wrong Word! Game Reset");
 resetGame();
 }
 }
@@ -219,7 +204,6 @@ paused=true;
 function resetGame(){
 snake=[{x:200,y:200}];
 score=0;
-completed=0;
 document.getElementById("scoreText").innerText="Score: 0";
 newSentence();
 }
