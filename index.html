@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grammar Snake - Speed Control</title>
+<title>Grammar Snake - Speed Fixed</title>
 
 <style>
 body{
@@ -14,18 +14,10 @@ body{
 }
 
 canvas{
-    background:#000;
+    background:black;
     display:block;
     margin:15px auto;
     border:4px solid white;
-}
-
-#info{
-    padding:10px;
-}
-
-.controls{
-    margin-top:10px;
 }
 
 button{
@@ -44,8 +36,32 @@ button{
     font-size:18px;
 }
 
-.speedControl{
-    margin-top:10px;
+/* VISIBLE SLIDER STYLE */
+input[type=range]{
+    -webkit-appearance:none;
+    width:80%;
+    height:10px;
+    background:white;
+    border-radius:5px;
+    outline:none;
+}
+
+input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:25px;
+    height:25px;
+    border-radius:50%;
+    background:red;
+    cursor:pointer;
+}
+
+input[type=range]::-moz-range-thumb{
+    width:25px;
+    height:25px;
+    border-radius:50%;
+    background:red;
+    cursor:pointer;
 }
 </style>
 </head>
@@ -55,44 +71,40 @@ button{
 
 <canvas id="game" width="400" height="400"></canvas>
 
-<div id="info">
-    <p id="scoreText">Score: 0</p>
-    <p><b>Correct Sentence:</b> <span id="sentence"></span></p>
-    <p><b>Tamil Meaning:</b> <span id="meaning"></span></p>
+<p id="scoreText">Score: 0</p>
+<p><b>Correct Sentence:</b> <span id="sentence"></span></p>
+<p><b>Tamil Meaning:</b> <span id="meaning"></span></p>
+
+<div>
+<button onclick="changeDir('up')">⬆</button><br>
+<button onclick="changeDir('left')">⬅</button>
+<button onclick="changeDir('down')">⬇</button>
+<button onclick="changeDir('right')">➡</button>
+<br>
+<button class="pauseBtn" onclick="togglePause()" id="pauseBtn">⏸ Pause</button>
 </div>
 
-<div class="controls">
-    <button onclick="changeDir('up')">⬆</button><br>
-    <button onclick="changeDir('left')">⬅</button>
-    <button onclick="changeDir('down')">⬇</button>
-    <button onclick="changeDir('right')">➡</button>
-    <br>
-    <button class="pauseBtn" onclick="togglePause()" id="pauseBtn">⏸ Pause</button>
-</div>
-
-<div class="speedControl">
-    <p>Speed Control</p>
-    <input type="range" min="100" max="600" value="300" id="speedSlider">
-    <p>Current Speed: <span id="speedValue">300</span> ms</p>
-</div>
+<h3>Speed Control</h3>
+<input type="range" min="100" max="600" value="300" id="speedSlider">
+<p>Current Speed: <span id="speedValue">300</span> ms</p>
 
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-let box = 20;
-let snake = [{x:200,y:200}];
-let dir = "right";
-let speed = 300;
+let box=20;
+let snake=[{x:200,y:200}];
+let dir="right";
+let speed=300;
 let gameInterval;
-let paused = false;
+let paused=false;
 
-let score = 0;
-let currentIndex = 0;
-let correctOrder = [];
-let wordObjects = [];
+let score=0;
+let currentIndex=0;
+let correctOrder=[];
+let wordObjects=[];
 
-const sentences = [
+const sentences=[
 {
 sentence:"She is playing football",
 tamil:"அவள் கால்பந்து விளையாடுகிறாள்"
@@ -115,10 +127,9 @@ let j=Math.floor(Math.random()*(i+1));
 }
 
 function newSentence(){
-let random = sentences[Math.floor(Math.random()*sentences.length)];
-
-correctOrder = random.sentence.split(" ");
-let words = [...correctOrder];
+let random=sentences[Math.floor(Math.random()*sentences.length)];
+correctOrder=random.sentence.split(" ");
+let words=[...correctOrder];
 shuffle(words);
 
 wordObjects=[];
@@ -136,9 +147,9 @@ document.getElementById("meaning").innerText=random.tamil;
 }
 
 function speak(word){
-let utter = new SpeechSynthesisUtterance(word);
-utter.lang="en-US";
-window.speechSynthesis.speak(utter);
+let u=new SpeechSynthesisUtterance(word);
+u.lang="en-US";
+speechSynthesis.speak(u);
 }
 
 function draw(){
@@ -180,7 +191,7 @@ alert("🎉 Sentence Completed!");
 newSentence();
 }
 }else{
-alert("❌ Wrong Word! Game Reset");
+alert("❌ Wrong Word!");
 resetGame();
 }
 }
