@@ -2,63 +2,57 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grammar Snake - Speed Fixed</title>
+<title>Grammar Snake</title>
 
 <style>
 body{
     margin:0;
-    background:#0d47a1;
+    background:#1565c0;
     color:white;
     font-family:Arial;
     text-align:center;
 }
 
 canvas{
-    background:black;
+    background:#1e88e5;
     display:block;
     margin:15px auto;
     border:4px solid white;
 }
 
 button{
-    padding:15px;
+    padding:14px;
     margin:5px;
     font-size:22px;
     border:none;
     border-radius:10px;
-    background:#1976d2;
+    background:#0d47a1;
     color:white;
 }
 
 .pauseBtn{
-    background:#ff9800;
+    background:#ffb300;
     color:black;
     font-size:18px;
 }
 
-/* VISIBLE SLIDER STYLE */
+.speedSection{
+    margin-top:10px;
+}
+
 input[type=range]{
     -webkit-appearance:none;
     width:80%;
-    height:10px;
+    height:12px;
     background:white;
-    border-radius:5px;
+    border-radius:6px;
     outline:none;
 }
 
 input[type=range]::-webkit-slider-thumb{
     -webkit-appearance:none;
-    appearance:none;
-    width:25px;
-    height:25px;
-    border-radius:50%;
-    background:red;
-    cursor:pointer;
-}
-
-input[type=range]::-moz-range-thumb{
-    width:25px;
-    height:25px;
+    width:28px;
+    height:28px;
     border-radius:50%;
     background:red;
     cursor:pointer;
@@ -84,13 +78,16 @@ input[type=range]::-moz-range-thumb{
 <button class="pauseBtn" onclick="togglePause()" id="pauseBtn">⏸ Pause</button>
 </div>
 
+<!-- SPEED CONTROL BELOW PAUSE -->
+<div class="speedSection">
 <h3>Speed Control</h3>
 <input type="range" min="100" max="600" value="300" id="speedSlider">
 <p>Current Speed: <span id="speedValue">300</span> ms</p>
+</div>
 
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
 
 let box=20;
 let snake=[{x:200,y:200}];
@@ -156,12 +153,12 @@ function draw(){
 ctx.clearRect(0,0,400,400);
 
 snake.forEach((s,i)=>{
-ctx.fillStyle=i==0?"lime":"green";
+ctx.fillStyle=i==0?"#00ff00":"#2e7d32";
 ctx.fillRect(s.x,s.y,box,box);
 });
 
 wordObjects.forEach(obj=>{
-ctx.fillStyle="red";
+ctx.fillStyle="#d32f2f";
 ctx.fillRect(obj.x,obj.y,box,box);
 ctx.fillStyle="white";
 ctx.font="10px Arial";
